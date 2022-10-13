@@ -1,14 +1,42 @@
 <template>
-    <h1>This is the Bike Catalog page</h1>
+    <div id="page-warp">
+        <div class="grid-wrap">
+            <div v-for="product in products" class="product-item" v-bind:key="product.id">
+                <img :src="product.imageUrl" alt="bikeImage">
+                <h3 class="product-name">{{product.name}}</h3>
+                <p class="product-price">${{product.price}}</p>
+                <router-link v-bind:to="'/bikeDetail/'+product.id">
+                    <button>View details</button>
+                </router-link>
+
+            </div>
+        </div>
+    </div>
+
 </template>
 
+
 <script>
+import { products } from '../fakedata';
 export default {
     name: 'BikeCatalogPage',
+    data() {
+        return {
+            title: "Bike Catalog",
+            products,
+        }
+    }
+
 };
 </script>
 
 <style scoped>
+#page-wrap {
+    margin-top: 16px;
+    padding: 16px;
+    max-width: 600px;
+}
+
 .grid-wrap {
     display: flex;
     flex-wrap: wrap;

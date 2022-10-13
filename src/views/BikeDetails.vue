@@ -1,10 +1,35 @@
 <template>
-    <h1>This is the Bike detail page</h1>
+    <div id="page-wrap" v-if="product">
+        <div id="img-wrap">
+            <img :src="product.imageUrl" alt="bikeImage">
+        </div>
+        <div id="product-details">
+            <h1>{{product.name}}</h1>
+            <h3 id="price">${{product.price}}</h3>
+            <p>Average rating: {{product.averageRating}}</p>
+            <button id="add-to-cart">Add to Cart</button>
+            <h4>Discription</h4>
+            <p>{{product.description}}</p>
+        </div>
+    </div>
+    <div v-else>
+        <ErrorPage />
+    </div>
 </template>
 
 <script>
+import ErrorPage from '../views/Default.vue';
+import { products } from '../fakedata';
 export default {
     name: 'BikeDetailPage',
+    data() {
+        return {
+            product: products.find((p) => p.id === this.$route.params.id),
+        }
+    },
+    components: {
+        ErrorPage,
+    }
 };
 </script>
 

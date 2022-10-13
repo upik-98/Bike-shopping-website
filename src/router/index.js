@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import BikeCatalogPage from '../views/BikeCatalog.vue';
 import CartPage from '../views/CartPage.vue';
 import BikeDetailPage from '../views/BikeDetails.vue';
-
+import ErrorPage from '../views/Default.vue';
 const routes = [
   {
     path: '/bikeCatalog',
@@ -10,7 +10,7 @@ const routes = [
     component: BikeCatalogPage,
   },
   {
-    path: '/bikeDetail:id',
+    path: '/bikeDetail/:id',
     name: 'bikeDetails',
     component: BikeDetailPage,
   },
@@ -22,6 +22,10 @@ const routes = [
   {
     path: '/',
     redirect: '/bikeCatalog',
+  },
+  {
+    path: '/:errorPath(.*)*',
+    component: ErrorPage,
   }
 ]
 
