@@ -4,34 +4,41 @@
         <div v-for="product in cartItems" :key="product.id" class="product-container">
             <img class="product-image" :src="product.imageUrl" alt="bikeImage">
             <div class="details-wrap">
-                <h3>{{product.name}}</h3>
-                <p>${{product.price}}</p>
+                <h3>{{ product.name }}</h3>
+                <p>${{ product.price }}</p>
             </div>
             <button class="remove-button">Remove from Cart</button>
         </div>
-        <h3 id='total-price'>Total: ${{totalPrice}}</h3>
+        <h3 id='total-price'>Total: ${{ totalPrice }}</h3>
         <button id="checkout-button">Proceed to checkout</button>
 
     </div>
 </template>
 
 <script>
-import { cartItems } from '../fakedata';
+
+import axios from 'axios';
 export default {
     name: 'CartPage',
     data() {
         return {
-            cartItems,
+            cartItems: [],
         }
     },
     computed: {
         totalPrice() {
             let total = 0;
-            for (let cart=0;cart<this.cartItems.length;cart++) {
+            for (let cart = 0; cart < this.cartItems.length; cart++) {
                 total += Number(this.cartItems[cart].price);
             }
             return total;
         }
+    },
+    async created() {
+        const id = this.$route.params.id;
+        const response = await axios.get(`/api/users/${id}/cart`);
+        const cartItem = response.data;
+        this.cartItems = cartItem;
     }
 };
 </script>
