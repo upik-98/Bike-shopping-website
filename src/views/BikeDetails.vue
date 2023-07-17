@@ -7,7 +7,7 @@
             <h1>{{ product.name }}</h1>
             <h3 id="price">${{ product.price }}</h3>
             <p>Average rating: {{ product.averageRating }}</p>
-            <button id="add-to-cart">Add to Cart</button>
+            <button id="add-to-cart" @click="addToCart(product.id)">Add to Cart</button>
             <h4>Discription</h4>
             <p>{{ product.description }}</p>
         </div>
@@ -34,6 +34,16 @@ export default {
     },
     components: {
         ErrorPage,
+    },
+    methods: {
+        async addToCart(id) {
+            console.log("id", id);
+            if (id) {
+                await axios.post('/api/users/123456789/cart/', { id: id });
+                alert("product added to cart");
+            }
+
+        }
     }
 };
 </script>

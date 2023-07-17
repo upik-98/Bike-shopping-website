@@ -7,7 +7,7 @@
                 <h3>{{ product.name }}</h3>
                 <p>${{ product.price }}</p>
             </div>
-            <button class="remove-button">Remove from Cart</button>
+            <button class="remove-button" @click="removeFromCart(product.id)">Remove from Cart</button>
         </div>
         <h3 id='total-price'>Total: ${{ totalPrice }}</h3>
         <button id="checkout-button">Proceed to checkout</button>
@@ -35,10 +35,17 @@ export default {
         }
     },
     async created() {
-        const id = this.$route.params.id;
-        const response = await axios.get(`/api/users/${id}/cart`);
+        const response = await axios.get(`/api/users/123456789/cart`);
         const cartItem = response.data;
         this.cartItems = cartItem;
+    },
+    methods: {
+        async removeFromCart(id) {
+            const response = await axios.delete(`/api/users/123456789/cart/${id}`);
+            const cartItem = response.data;
+            this.cartItems = cartItem;
+            alert("Cart item removed successfully");
+        }
     }
 };
 </script>
