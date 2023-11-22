@@ -7,7 +7,13 @@
             <h1>{{ product.name }}</h1>
             <h3 id="price">${{ product.price }}</h3>
             <p>Average rating: {{ product.averageRating }}</p>
-            <button id="add-to-cart" @click="addToCart(product.id)">Add to Cart</button>
+            <button id="add-to-cart" @click="addToCart(product.id)" v-if="!alreadyPresent && !showSuccessMessage">Add to
+                Cart</button>
+            <button id="add-to-cart" class="green-button" @click="addToCart(product.id)"
+                v-if="!alreadyPresent && showSuccessMessage">successfully added to cart</button>
+            <button id="add-to-cart" class="grey-button" @click="addToCart(product.id)" v-if="alreadyPresent">Item is
+                already in the
+                Cart</button>
             <h4>Discription</h4>
             <p>{{ product.description }}</p>
         </div>
@@ -25,12 +31,17 @@ export default {
     data() {
         return {
             product: [],
+            cartBikes: [],
+            showSuccessMessage: false,
         }
     },
     async created() {
         const id = this.$route.params.id;
         const response = await axios.get('/api/products/' + id);
         this.product = response.data;
+        const cartBikes = await axios.get('/api/users/123456789/cart');
+        this.cartBikes = cartBikes.data;
+        console.log()
     },
     components: {
         ErrorPage,
@@ -40,15 +51,31 @@ export default {
             console.log("id", id);
             if (id) {
                 await axios.post('/api/users/123456789/cart/', { id: id });
-                alert("product added to cart");
+                this.showSuccessMessage = true;
+                setTimeout(() => { this.$router.push('/bikeCatalog') }, 2000);
+
             }
 
         }
+    },
+    computed: {
+        alreadyPresent() {
+            console.log(this.cartBikes);
+            return this.cartBikes.some(item => item.id == this.product.id);
+        },
     }
 };
 </script>
 
 <style scoped>
+.green-button {
+    background-color: lightgreen;
+}
+
+.grey-button {
+    background-color: grey;
+}
+
 #page-wrap {
     margin-top: 16px;
     padding: 16px;

@@ -29,9 +29,10 @@ export default {
         totalPrice() {
             let total = 0;
             for (let cart = 0; cart < this.cartItems.length; cart++) {
-                total += Number(this.cartItems[cart].price);
+                total += Number((this.cartItems[cart].price).replace(",", ''));
+                console.log(total);
             }
-            return total;
+            return total.toLocaleString();
         }
     },
     async created() {
@@ -44,7 +45,7 @@ export default {
             const response = await axios.delete(`/api/users/123456789/cart/${id}`);
             const cartItem = response.data;
             this.cartItems = cartItem;
-            alert("Cart item removed successfully");
+            // alert("Cart item removed successfully");
         }
     }
 };
