@@ -1,6 +1,7 @@
 import express from 'express';
 import { MongoClient } from 'mongodb';
 import path from 'path';
+import history from 'connect-history-api-fallback';
 require('dotenv').config();
 async function start() {
     //const url = `mongodb+srv://fsv-server:Abc12@cluster0.vkql371.mongodb.net/?retryWrites=true&w=majority`
@@ -12,6 +13,8 @@ async function start() {
     const app = express();
     app.use(express.json());
     app.use('/images', express.static(path.join(__dirname, '../image')));
+    app.use(express.static(path.resolve(__dirname, '../dist'), { maxAge: '2y', etag: false }));
+    app.use(history());
     app.get('/api/products', async (req, res) => {
         const products = await db.collection('products').find({}).toArray();
         res.send(products);
@@ -58,6 +61,7 @@ async function start() {
         const populatedCart = await populateCartIds(user.cartItems);
         res.json(populatedCart);
     });
+    app.get('*', async (req, res) => { res.sendFile(path.join(__dirname, '../dist/index.html')); });
 
     app.listen(8000, () => {
         console.log('Server is listening on port 8000')
